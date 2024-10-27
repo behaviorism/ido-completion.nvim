@@ -1,6 +1,6 @@
 # ido.nvim
 
-An Emacs-inspired Interactively Do Things (IDO) plugin for neovim. This plugin enhances the neovim command line by allowing interactive, fuzzy completion on the command-line prompt with customizable settings for command-specific behavior and display options.
+An Emacs-inspired [Interactively Do Things (IDO)](https://www.gnu.org/software/emacs/manual/html_mono/ido.html) plugin for neovim. This plugin enhances the neovim command line by allowing interactive, fuzzy completion on the command-line prompt with customizable settings for command-specific behavior and display options.
 
 ## Installation
 
