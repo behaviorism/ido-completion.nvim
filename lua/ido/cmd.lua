@@ -107,11 +107,11 @@ function M.update_command_checked()
   current_command_str = new_command_str
 
   -- Check if completion should run for the command
-  command_error = check_command(cmdline)
+  local command_error = check_command(cmdline)
   if command_error then return command_error end
 end
 
-local function get_display_prospects(prospects)
+local function get_display_prospects(prospects, current_prospect_index)
   local completion_str
 
   local prospects_length = #prospects
@@ -119,8 +119,19 @@ local function get_display_prospects(prospects)
   if prospects_length == 1 then
     completion_str = "[" .. prospects[1] .. "] [Matched]"
   elseif prospects_length > 1 then
+    local page = 1
+
+    -- Flip page until page can contain the current prospect
+    while current_prospect_index > (config.configuration.max_prospects * page) do
+      page = page + 1
+    end
+
+    -- Only display items on current page, containing N prospects = configuration.max_prospects
+    local page_start = ((page - 1) * config.configuration.max_prospects) + 1
+    local page_end = page_start + config.configuration.max_prospects - 1
+
     completion_str = "{" ..
-        table.concat(prospects, " | ", 1, math.min(prospects_length, config.configuration.max_prospects))
+        table.concat(prospects, " | ", page_start, math.min(prospects_length, page_end))
 
     if prospects_length > config.configuration.max_prospects then
       completion_str = completion_str .. " | ..."
@@ -134,8 +145,8 @@ local function get_display_prospects(prospects)
   return completion_str
 end
 
-function M.display_prospects(prospects)
-  current_completion_str = get_display_prospects(prospects)
+function M.display_prospects(prospects, current_prospect_index)
+  current_completion_str = get_display_prospects(prospects, current_prospect_index)
   set_cmdline(current_command_str .. current_completion_str, current_position)
 end
 
@@ -176,13 +187,13 @@ function M.match_completion(prospect, pattern)
   set_cmdline(current_command_str, current_position)
 end
 
-function M.update_completion(previous_prospect, new_prospect, new_prospects)
+function M.update_completion(previous_prospect, new_prospect, new_prospects, current_prospect_index)
   -- Update command str
   local command_str_with_no_pattern = current_command_str:sub(1, #current_command_str - #previous_prospect)
   current_command_str = command_str_with_no_pattern .. new_prospect
 
   -- Update completion str
-  current_completion_str = get_display_prospects(new_prospects)
+  current_completion_str = get_display_prospects(new_prospects, current_prospect_index)
 
   -- Update current cursor position
   current_position = #current_command_str + 1

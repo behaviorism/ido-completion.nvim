@@ -64,7 +64,7 @@ After installing the plugin, restart neovim and run `:PackerSync`, `:PlugInstall
 
 ### Keybindings
 
-The default keybindings for cycling through IDO suggestions are:
+The default keybindings for cycling through ido suggestions are:
 - **`Tab`** to select the next suggestion
 - **`Shift-Tab`** to select the previous suggestion
 

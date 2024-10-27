@@ -91,7 +91,7 @@ function M.update_completion()
   -- Map prospects to show only differences from pattern
   local mapped_prospects = utils.remove_common_prefixes(current_prospects, pattern)
   -- Display prospects on cmdlineg
-  cmd.display_prospects(mapped_prospects)
+  cmd.display_prospects(mapped_prospects, current_prospect_index)
 end
 
 function M.attempt_confirm()
@@ -143,7 +143,7 @@ function M.cycle(offset)
   -- Map prospects to show only differences from pattern
   local mapped_prospects = utils.remove_common_prefixes(current_prospects, new_prospect)
 
-  cmd.update_completion(previous_prospect, new_prospect, mapped_prospects)
+  cmd.update_completion(previous_prospect, new_prospect, mapped_prospects, current_prospect_index)
 end
 
 return M
