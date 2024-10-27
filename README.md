@@ -1,10 +1,10 @@
 # ido.nvim
 
-An Emacs-inspired Interactively Do Things (IDO) plugin for Neovim. This plugin enhances the Neovim command line by allowing interactive, fuzzy completion on the command-line prompt with customizable settings for command-specific behavior and display options.
+An Emacs-inspired Interactively Do Things (IDO) plugin for neovim. This plugin enhances the neovim command line by allowing interactive, fuzzy completion on the command-line prompt with customizable settings for command-specific behavior and display options.
 
 ## Installation
 
-You can install this plugin using popular Neovim plugin managers, such as Packer, vim-plug, or lazy.nvim. Here’s how to install with each:
+You can install this plugin using popular neovim plugin managers, such as Packer, vim-plug, or lazy.nvim. Here’s how to install with each:
 
 ### Using [Packer](https://github.com/wbthomason/packer.nvim)
 
@@ -29,7 +29,7 @@ Plug 'behaviorism/ido.nvim'
 }
 ```
 
-After installing the plugin, restart Neovim and run `:PackerSync`, `:PlugInstall`, or `:Lazy sync` depending on the plugin manager you use.
+After installing the plugin, restart neovim and run `:PackerSync`, `:PlugInstall`, or `:Lazy sync` depending on the plugin manager you use.
 
 ## Configuration
 
@@ -62,6 +62,14 @@ After installing the plugin, restart Neovim and run `:PackerSync`, `:PlugInstall
   }
   ```
 
+### Keybindings
+
+The default keybindings for cycling through IDO suggestions are:
+- **`Tab`** to select the next suggestion
+- **`Shift-Tab`** to select the previous suggestion
+
+These can be customized if needed by setting up your own key mappings within neovim.
+
 ### Full Example
 
 ```lua
@@ -71,3 +79,4 @@ require('ido').setup {
     return_submits_commands = { ':buffer' }
 }
 ```
+
