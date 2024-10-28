@@ -88,7 +88,7 @@ Three of the four types of ido matching are supported by default:
 
 3. [**Flexible Matching**](https://www.gnu.org/software/emacs/manual/html_node/ido/Flexible-Matching.html): Enables more lenient matching criteria, allowing to find suggestions even if they don’t match the input exactly.
 
-While interactive substring matching should perform reliably, the behavior of prefix and flexible matching may vary depending on neovim's internal function `matchfuzzy`.
+While interactive substring matching should perform reliably, the behavior of prefix and flexible matching may vary depending on neovim's internal function [`matchfuzzy`](https://neovim.io/doc/user/builtin.html#matchfuzzy).
 
 ### Additional Notes
 
