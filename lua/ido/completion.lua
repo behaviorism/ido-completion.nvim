@@ -26,35 +26,36 @@ local function get_completion_type_checked()
 end
 
 local function get_search_pattern(pattern, completion_type)
-  local search_pattern = ""
-
   -- To avoid native completion filtering automatically, we set
   -- the most generic pattern possible. For paths, this means the
   -- head of the path.
   if vim.tbl_contains(PATH_CMD_TYPES, completion_type) then
     -- Is complete path
     if pattern:sub(-1) == "/" then
-      search_pattern = pattern
-    else
-      -- If there is a complete path before the last
-      -- part of the path, use it so that the completer
-      -- can get all the items in the current dir
-      local path_head = vim.fn.fnamemodify(pattern, ":h")
-      -- TODO: check if this is needed
-      -- local is_directory = vim.fn.isdirectory(path_head)
-      -- if is_directory then
-      if path_head ~= "" and path_head ~= "." then
-        search_pattern = path_head .. "/"
-      end
-      -- end
-
-      -- If tail starts with dot, assumes user is looking for dotfiles
-      local path_tail = vim.fn.fnamemodify(pattern, ":t")
-
-      if path_tail:sub(1, 1) == "." then
-        search_pattern = search_pattern .. ".*"
-      end
+      return pattern
     end
+  end
+
+  -- If is complete path but missing final slash, add it
+  -- local is_directory = vim.fn.isdirectory(pattern)
+  -- if is_directory then
+  --   return pattern .. "/"
+  -- end
+
+  local search_pattern = ""
+  -- If there is a complete path before the last
+  -- part of the path, use it so that the completer
+  -- can get all the items in the current dir
+  local path_head = vim.fn.fnamemodify(pattern, ":h")
+  if path_head ~= "" and path_head ~= "." then
+    search_pattern = path_head .. "/"
+  end
+  -- end
+
+  -- If tail starts with dot, assumes user is looking for dotfiles
+  local path_tail = vim.fn.fnamemodify(pattern, ":t")
+  if path_tail:sub(1, 1) == "." then
+    search_pattern = search_pattern .. ".*"
   end
 
   return search_pattern
@@ -187,9 +188,17 @@ function M.update_completion()
 end
 
 function M.attempt_confirm()
+  if #current_prospects > 0 and current_prospect_index > 0 then
+    M.update_completion()
+    return true
+  end
+end
+
+function M.attempt_confirm_match()
   if #current_prospects == 1 then
     local previous_prospect = cmd.strip_completion(vim.fn.getcmdcomplpat())
     cmd.match_completion(current_prospects[1], previous_prospect)
+    return true
   end
 end
 

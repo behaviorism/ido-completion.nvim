@@ -11,6 +11,8 @@ function M.remove_common_prefixes(strings, pattern)
     return strings
   end
 
+  path_head = path_head .. "/"
+
   for i = 1, #strings do
     local str = strings[i]
     -- Check if the string starts with the pattern path head

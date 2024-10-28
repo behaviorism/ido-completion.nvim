@@ -24,9 +24,22 @@ function M.setup()
 
   -- Hijack submit for return matching
   vim.keymap.set("c", "<CR>", function()
+    local completed = false
+
+    -- Attempt matching submit
     if cmd.some_command_active(config.configuration.return_submits_commands) then
-      completion.attempt_confirm()
+      completed = completion.attempt_confirm_match()
     end
+
+    -- Attempt confirm prospect selection
+    if not completed then
+      -- If successful, prevent command submission
+      -- with early return
+      if completion.attempt_confirm() then
+        return
+      end
+    end
+
 
     return "<CR>"
   end, { noremap = true, expr = true })
