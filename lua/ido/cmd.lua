@@ -53,7 +53,7 @@ end
 function M.remove_completion()
   -- If completion is displayed, remove from cmdline and
   -- set state to nil
-  if #current_completion_str > 0 then
+  if current_completion_str ~= "" then
     set_cmdline(current_command_str, current_position)
     current_completion_str = ""
   end
@@ -111,26 +111,31 @@ function M.update_command_checked()
   if command_error then return command_error end
 end
 
-local function get_display_prospects(prospects, current_prospect_index)
-  local completion_str
+local function get_display_prospects(prospects, current_prospect_index, current_substring_prospect)
+  local completion_str = ""
 
   local prospects_length = #prospects
 
-  if prospects_length == 1 then
-    completion_str = "[" .. prospects[1] .. "] [Matched]"
-  elseif prospects_length > 1 then
-    local page = 1
+  -- Or because it is an optional argument
+  if (current_substring_prospect or "") ~= "" then
+    completion_str = completion_str .. "[" .. current_substring_prospect .. "]"
+  end
 
-    -- Flip page until page can contain the current prospect
-    while current_prospect_index > (config.configuration.max_prospects * page) do
-      page = page + 1
+  if prospects_length == 1 then
+    completion_str = completion_str .. "[" .. prospects[1] .. "] [Matched]"
+  elseif prospects_length > 1 then
+    -- 0 index based page
+    local page = 0
+
+    if current_prospect_index > 0 then
+      page = math.ceil(current_prospect_index / config.configuration.max_prospects) - 1
     end
 
     -- Only display items on current page, containing N prospects = configuration.max_prospects
-    local page_start = ((page - 1) * config.configuration.max_prospects) + 1
+    local page_start = (page * config.configuration.max_prospects) + 1
     local page_end = page_start + config.configuration.max_prospects - 1
 
-    completion_str = "{" ..
+    completion_str = completion_str .. "{" ..
         table.concat(prospects, " | ", page_start, math.min(prospects_length, page_end))
 
     if prospects_length > config.configuration.max_prospects then
@@ -145,8 +150,8 @@ local function get_display_prospects(prospects, current_prospect_index)
   return completion_str
 end
 
-function M.display_prospects(prospects, current_prospect_index)
-  current_completion_str = get_display_prospects(prospects, current_prospect_index)
+function M.display_prospects(prospects, current_prospect_index, current_substring_prospect)
+  current_completion_str = get_display_prospects(prospects, current_prospect_index, current_substring_prospect)
   set_cmdline(current_command_str .. current_completion_str, current_position)
 end
 

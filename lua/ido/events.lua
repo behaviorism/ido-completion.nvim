@@ -22,6 +22,7 @@ function M.setup()
   vim.keymap.set("c", "<Tab>", function() completion.cycle(1) end, { noremap = true })
   vim.keymap.set("c", "<S-Tab>", function() completion.cycle(-1) end, { noremap = true })
 
+  -- Hijack submit for return matching
   vim.keymap.set("c", "<CR>", function()
     if cmd.some_command_active(config.configuration.return_submits_commands) then
       completion.attempt_confirm()

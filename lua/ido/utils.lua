@@ -15,7 +15,7 @@ function M.remove_common_prefixes(strings, pattern)
 
   for i = 1, #strings do
     local str = strings[i]
-    if str:find(common_prefix) == 1 then
+    if str:sub(1, #common_prefix) == common_prefix then
       local mapped_str = str:sub(#common_prefix + 1)
       mapped_str = mapped_str:gsub("^/+", "")
       results[#results + 1] = mapped_str

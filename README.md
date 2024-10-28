@@ -62,14 +62,6 @@ After installing the plugin, restart neovim and run `:PackerSync`, `:PlugInstall
   }
   ```
 
-### Keybindings
-
-The default keybindings for cycling through ido suggestions are:
-- **`Tab`** to select the next suggestion
-- **`Shift-Tab`** to select the previous suggestion
-
-These can be customized if needed by setting up your own key mappings within neovim.
-
 ### Full Example
 
 ```lua
@@ -79,4 +71,30 @@ require('ido').setup {
     return_submits_commands = { ':buffer' }
 }
 ```
+
+### Keybindings
+
+The default keybindings for cycling through ido suggestions are:
+- **`Tab`** to select the next suggestion
+- **`Shift-Tab`** to select the previous suggestion
+
+These can be customized if needed by setting up your own key mappings within neovim.
+
+### Matching Behavior
+
+`ido.nvim` supports three of the four types of ido matching by default:
+
+1. [**Interactive Substring Matching**](https://www.gnu.org/software/emacs/manual/html_node/ido/Interactive-Substring-Matching.html): Allows users to match substrings within the input dynamically as they type.
+
+2. [**Prefix Matching**](https://www.gnu.org/software/emacs/manual/html_node/ido/Prefix-Matching.html): Matches suggestions that start with the given input.
+
+3. [**Flexible Matching**](https://www.gnu.org/software/emacs/manual/html_node/ido/Flexible-Matching.html): Enables more lenient matching criteria, allowing you to find suggestions even if they don’t match the input exactly.
+
+While interactive substring matching should perform reliably, the behavior of prefix and flexible matching may vary depending on neovim's internal function `matchfuzzy`.
+
+### Additional Notes
+
+- **Dotfiles Recognition**: When using a path segment that begins with a dot (e.g., `dotfiles/.dotfile`), ido.nvim will automatically look for dotfiles.
+  
+- **Color Highlighting Limitations**: Currently, neovim does not support color or style highlighting for individual segments within the command line text itself. As a result, highlighting in the command line is not supported.
 
