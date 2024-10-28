@@ -40,11 +40,13 @@ local function get_search_pattern(pattern, completion_type)
       -- part of the path, use it so that the completer
       -- can get all the items in the current dir
       local path_head = vim.fn.fnamemodify(pattern, ":h")
-      local is_directory = vim.fn.isdirectory(path_head)
-
-      if is_directory and path_head ~= "." then
+      -- TODO: check if this is needed
+      -- local is_directory = vim.fn.isdirectory(path_head)
+      -- if is_directory then
+      if path_head ~= "" and path_head ~= "." then
         search_pattern = path_head .. "/"
       end
+      -- end
 
       -- If tail starts with dot, assumes user is looking for dotfiles
       local path_tail = vim.fn.fnamemodify(pattern, ":t")
@@ -177,6 +179,9 @@ function M.update_completion()
 
   -- Map prospects to show only differences from pattern
   local mapped_prospects = utils.remove_common_prefixes(current_prospects, pattern)
+  if #current_prospects == 2 then
+    print(table.concat(mapped_prospects, " | "))
+  end
   -- Display prospects on cmdlineg
   cmd.display_prospects(mapped_prospects, current_prospect_index, current_substring_prospect)
 end

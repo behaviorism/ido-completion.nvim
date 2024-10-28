@@ -1,26 +1,25 @@
 local M = {}
 
--- Generated with ChatGPT
 function M.remove_common_prefixes(strings, pattern)
   local results = {}
 
-  local last_slash_pos = pattern:find("/[^/]*$")
+  -- This mainly pertains to paths, so if the pattern does not
+  -- have a path, we just ignore
+  local path_head = vim.fn.fnamemodify(pattern, ":h")
 
-  local common_prefix
-  if last_slash_pos then
-    common_prefix = pattern:sub(1, last_slash_pos - 1)
-  else
-    common_prefix = pattern
+  if path_head == "" then
+    return strings
   end
 
   for i = 1, #strings do
     local str = strings[i]
-    if str:sub(1, #common_prefix) == common_prefix then
-      local mapped_str = str:sub(#common_prefix + 1)
-      mapped_str = mapped_str:gsub("^/+", "")
-      results[#results + 1] = mapped_str
+    -- Check if the string starts with the pattern path head
+    if str:sub(1, #path_head) == path_head then
+      -- Map to suffix
+      local mapped_str = str:sub(#path_head + 1)
+      table.insert(results, mapped_str)
     else
-      results[#results + 1] = str
+      table.insert(results, str)
     end
   end
 
