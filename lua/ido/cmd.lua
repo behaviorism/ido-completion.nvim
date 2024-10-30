@@ -73,7 +73,7 @@ local function check_command(cmd)
         (commandline_type == ":" and cmd:match("^[%%'<,>]*s/"))
     then
       M.remove_completion()
-      return "Search or substitution mode"
+      return "Search or substitution mode are not allowed"
     end
   end
 

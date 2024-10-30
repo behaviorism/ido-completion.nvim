@@ -19,8 +19,8 @@ end
 
 function M.setup()
   -- Hijack autocompletion keys
-  vim.keymap.set("c", "<Tab>", function() completion.cycle(1) end, { noremap = true })
-  vim.keymap.set("c", "<S-Tab>", function() completion.cycle(-1) end, { noremap = true })
+  vim.keymap.set("c", "<Tab>", completion.select_next_prospect, { noremap = true })
+  vim.keymap.set("c", "<S-Tab>", completion.select_previous_prospect, { noremap = true })
 
   -- Hijack submit for return matching
   vim.keymap.set("c", "<CR>", function()
@@ -28,18 +28,15 @@ function M.setup()
 
     -- Attempt matching submit
     if cmd.some_command_active(config.configuration.return_submits_commands) then
-      completed = completion.attempt_confirm_match()
+      completed = completion.try_confirm_match()
     end
 
     -- Attempt confirm prospect selection
     if not completed then
       -- If successful, prevent command submission
       -- with early return
-      if completion.attempt_confirm() then
-        return
-      end
+      if completion.try_confirm() then return end
     end
-
 
     return "<CR>"
   end, { noremap = true, expr = true })
