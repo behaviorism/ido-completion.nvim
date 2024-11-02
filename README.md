@@ -1,6 +1,6 @@
-# ido.nvim
+# ido-completion.nvim
 
-An Emacs-inspired [Interactively Do Things (IDO)](https://www.gnu.org/software/emacs/manual/html_mono/ido.html) plugin for neovim. This plugin enhances the neovim command line by allowing interactive, fuzzy completion on the command-line prompt with customizable settings for command-specific behavior and display options.
+An Emacs-inspired [Interactively Do Things (IDO)](https://www.gnu.org/software/emacs/manual/html_mono/ido.html) completion plugin for neovim. This plugin enhances the neovim command line by allowing interactive, fuzzy completion on the command-line prompt with customizable settings for command-specific behavior and display options.
 
 ## Installation
 
@@ -9,22 +9,22 @@ You can install this plugin using popular neovim plugin managers, such as Packer
 ### Using [Packer](https://github.com/wbthomason/packer.nvim)
 
 ```lua
-use 'behaviorism/ido.nvim'
+use 'behaviorism/ido-completion.nvim'
 ```
 
 ### Using [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```vim
-Plug 'behaviorism/ido.nvim'
+Plug 'behaviorism/ido-completion.nvim'
 ```
 
 ### Using [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua
 {
-  'behaviorism/ido.nvim',
+  'behaviorism/ido-completion.nvim',
   config = function()
-    require('ido').setup()
+    require('ido-completion').setup()
   end
 }
 ```
@@ -39,44 +39,45 @@ After installing the plugin, restart neovim and run `:PackerSync`, `:PlugInstall
   
   ```lua
   -- Example: Limit suggestions to 8 options
-  require('ido').setup {
+  require('ido-completion').setup {
       max_prospects = 8
   }
   ```
 
-- **`active_commands`** *(default: `{}`)*: A list of specific commands where ido will be active. If left blank, it activates on all commands.
+- **`active_commands`** *(default: `{}`)*: A list of specific commands where IDO will be active. If left blank, it activates on all commands.
 
   ```lua
-  -- Example: Enable ido only on `:buffer ` and `:e ` commands
-  require('ido').setup {
+  -- Example: Enable IDO only on `:buffer ` and `:e ` commands
+  require('ido-completion').setup {
       active_commands = { ':buffer ', ':e ' }
   }
   ```
 
-- **`return_submits_commands`** *(default: `{}`)*: A list of commands where pressing Return will auto-complete and execute the command if there’s a matched suggestion.
+- **`inactive_commands`** *(default: `{}`)*: A list of commands where IDO will be inactive. If left blank, IDO will be active on every command except for inactive commands.
 
   ```lua
-  -- Example: Automatically submit commands for `:buffer` and `:bdelete`
-  require('ido').setup {
-      return_submits_commands = { ':buffer', ':bdelete' }
+  -- Example: Disable IDO on the `:help` command
+  require('ido-completion').setup {
+      inactive_commands = { ':help' }
   }
   ```
 
-### Full Example
+- **`match_submits_commands`** *(default: `{" :find", ":e", ":buffer"}`)*: A list of commands where pressing Return or Tab when there is a single prospect will auto-complete and execute the command (except for directories). Useful for buffers and files.
 
-```lua
-require('ido').setup {
-    max_prospects = 12,
-    active_commands = { ':buffer ', ':e ' },
-    return_submits_commands = { ':buffer' }
-}
-```
+  ```lua
+  -- Example: Automatically submit commands for `:find` and `:edit`
+  require('ido-completion').setup {
+      match_submits_commands = { ":find", ":e" }
+  }
+  ``` 
 
 ### Keybindings
 
 The default keybindings for cycling through ido suggestions are:
 - **`Tab`** to select the next suggestion
 - **`Shift-Tab`** to select the previous suggestion
+- **`RET`** to confirm the current selection or submit if there are no other matches
+- **`Ctrl-g`** to force submission of current command (i.e.: directories instead of files)
 
 ### Matching Behavior
 
@@ -92,7 +93,5 @@ While interactive substring matching should perform reliably, the behavior of pr
 
 ### Additional Notes
 
-- **Dotfiles Recognition**: When using a path segment that begins with a dot (e.g., `dotfiles/.dotfile`), ido.nvim will automatically look for dotfiles.
-  
 - **Color Highlighting Limitations**: Currently, neovim does not support color or style highlighting for individual segments within the command line text itself. As a result, highlighting in the command line is not supported.
 
